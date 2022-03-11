@@ -24,7 +24,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRouter);
-
+app.use( (err, req, res, next) => {
+    res.status(401).send(err.message);
+} );
 
 app.listen(port, host,() => {
     console.log(`Сервер запущен на ${host}:${port}`);

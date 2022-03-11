@@ -11,7 +11,8 @@ userRouter.all('/register', (req, res) => {
 });
 
 userRouter.all('/*', (req, res) => {
-    res.redirect("/users/login");
+    throw new Error("Неправильный роутинг!");
 });
+
 
 export {userRouter};
