@@ -5,9 +5,26 @@ const host = '127.0.0.1';
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Стартовая страница')
+const cb = (req, res, next) => {
+    console.log("cb");
+    next();
+}
+
+const cb2 = (req, res, next) => {
+    console.log("cb2");
+    next();
+}
+
+
+app.all('/', (req, res, next) => {
+   console.log("All");
+   next();
 });
+
+app.get('/', [cb, cb2, (req, res) => {
+    res.send('Стартовая страница');
+    console.log("Стартовая страница");
+}]);
 
 app.get('/hello', (req, res) => {
     res.send('Привет!')
