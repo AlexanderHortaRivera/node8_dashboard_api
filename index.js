@@ -1,34 +1,23 @@
 import express from 'express';
+import {userRouter} from "./users/users.js";
 
 const port = 8000;
 const host = '127.0.0.1';
 
 const app = express();
 
-const cb = (req, res, next) => {
-    console.log("cb");
-    next();
-}
-
-const cb2 = (req, res, next) => {
-    console.log("cb2");
-    next();
-}
-
-
-app.all('/', (req, res, next) => {
-   console.log("All");
-   next();
-});
-
-app.get('/', [cb, cb2, (req, res) => {
-    res.send('Стартовая страница');
-    console.log("Стартовая страница");
-}]);
-
 app.get('/hello', (req, res) => {
-    res.send('Привет!')
+    //res.send('Привет!')
+    //res.status(200).send({success: true, city:123});
+    res.redirect(301, "/");
 });
+
+app.get('/', (req, res) => {
+    //res.send('Привет!')
+    res.status(200).send({success: true, city:123});
+});
+
+app.use('/users', userRouter);
 
 
 app.listen(port, host,() => {
