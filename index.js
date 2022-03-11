@@ -6,6 +6,12 @@ const host = '127.0.0.1';
 
 const app = express();
 
+// middleware
+app.use((req, res, next) => {
+    console.log(Date.now());
+    next();
+});
+
 app.get('/hello', (req, res) => {
     //res.send('Привет!')
     //res.status(200).send({success: true, city:123});
