@@ -1,6 +1,7 @@
 import express, {Express} from "express";
-import {userRouter} from "./users/users";
 import { Server } from 'http';
+import {LoggerService} from "./logger/logger.service";
+import {UserController} from "./users/users.controller";
 
 export class App {
 
@@ -8,21 +9,25 @@ export class App {
     port: number;
     host: string;
     server: Server;
+    logger: LoggerService;
+    userController: UserController;
 
-    constructor(port: number) {
+    constructor(port: number, host: string, logger: LoggerService, userController: UserController) {
         this.app = express();
         this.port = port;
-        this.host = "127.0.0.1";
+        this.host = host;
+        this.logger = logger;
+        this.userController = userController;
     }
 
     useRoutes() {
-        this.app.use('/users', userRouter);
+        this.app.use('/users', this.userController.router);
     }
 
     public async init(){
         this.useRoutes();
         this.server = this.app.listen(this.port, this.host);
-        console.log(`Сервер запущен на ${this.host}:${this.port}`);
+        this.logger.log(`Сервер запущен на ${this.host}:${this.port}`);
     }
 
 }
