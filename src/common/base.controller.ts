@@ -7,6 +7,7 @@ import 'reflect-metadata';
 
 @injectable()
 export abstract class BaseController {
+
     private readonly _router: Router;
 
     constructor(private logger: ILogger) {
@@ -34,7 +35,7 @@ export abstract class BaseController {
 
         for (const route of routes) {
 
-            this.logger.log(`[${route.method}] ${route.path}`);
+            this.logger.log(`[${route.method}] ${route.controller}${route.path}`);
             const handler = route.func.bind(this);
             this.router[route.method](route.path, handler);
 
