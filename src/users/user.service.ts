@@ -7,11 +7,18 @@ import {injectable} from "inversify";
 @injectable()
 export class UserService implements IUserService {
 
-    createUser( { email, name, password }: UserRegisterDto ): User | null {
+    async createUser( { email, name, password }: UserRegisterDto ): Promise<User | null> {
+        const newUser = new User(email, name);
+        await newUser.setPassword(password);
+
+        // проверка что он есть?
+        // Если есть - возвращаем null
+        // если нет - создаем
+
         return null;
     }
 
-    validateUser( dto: UserLoginDto): boolean {
+    async validateUser( dto: UserLoginDto): Promise<boolean> {
         return true;
     }
 

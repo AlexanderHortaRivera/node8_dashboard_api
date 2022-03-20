@@ -4,6 +4,7 @@ import {IControllerRoute} from "./route.interface";
 import {ILogger} from "../logger/logger.service.interface";
 import {injectable} from "inversify";
 import 'reflect-metadata';
+import {IMiddleware} from "./middleware.interface";
 
 @injectable()
 export abstract class BaseController {
@@ -36,8 +37,10 @@ export abstract class BaseController {
         for (const route of routes) {
 
             this.logger.log(`[${route.method}] ${route.controller}${route.path}`);
+            const middleware = route.middlewares?.map( (m) => m.execute.bind(m) );
             const handler = route.func.bind(this);
-            this.router[route.method](route.path, handler);
+            const pipeline = middleware ? [...middleware, handler] : handler;
+            this.router[route.method](route.path, pipeline);
 
         }
 
