@@ -8,6 +8,7 @@ import {IConfigService} from "../config/config.service.interface";
 import {ILogger} from "../logger/logger.service.interface";
 import {IUsersRepository} from "./users.repository.interface";
 import {UserModel} from "@prisma/client";
+import {hash} from "bcryptjs";
 
 @injectable()
 export class UserService implements IUserService {
@@ -32,8 +33,21 @@ export class UserService implements IUserService {
         return this.usersRepository.create(newUser);
     }
 
-    async validateUser( dto: UserLoginDto): Promise<boolean> {
-        return true;
+    async validateUser( { email, password }: UserLoginDto): Promise<boolean> {
+
+        // ищем пользователя в репозиторий
+        // Сверяем хэши пароля
+
+        const findedUser = await this.usersRepository.find(email);
+
+        if(!findedUser) {
+            return false;
+        }
+
+        const newUser = new User(findedUser.email, findedUser.name, findedUser.password);
+
+        return newUser.comparePassword(password);
+
     }
 
 }
